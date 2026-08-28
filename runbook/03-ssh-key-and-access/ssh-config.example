@@ -1,0 +1,6 @@
+Host z6
+    HostName z6-login.tail8da8d4.ts.net
+    Port 22
+    User YOUR_LINUX_USERNAME
+    IdentityFile ~/.ssh/z6_ed25519
+    IdentitiesOnly yes
