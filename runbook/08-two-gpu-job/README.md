@@ -1,5 +1,9 @@
 # Runbook 08 — Submit a two-GPU PyTorch job
 
+Use this runbook only when the Portal Account page shows **Maximum concurrent
+GPUs: 2**. The default allocation is one; Slurm immediately rejects a two-GPU
+job from a one-GPU account with an explicit limit message.
+
 This template uses one Slurm task to start two local `torchrun` workers. Copy
 [`two-gpu-torchrun.sbatch`](two-gpu-torchrun.sbatch) and
 [`ddp-smoke.py`](ddp-smoke.py) into the same project directory:

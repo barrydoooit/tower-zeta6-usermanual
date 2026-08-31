@@ -3,7 +3,8 @@
 1. Open the one-time activation link from the approval email.
 2. Set a unique Portal password.
 3. Sign in and confirm the request status is **Provisioned**.
-4. Record the approved project path and quotas shown on the Account page.
+4. Record the approved project path, storage quotas and maximum concurrent GPU
+   count shown on the Account page.
 
 The Portal password is only for the website. Linux password authentication is
 disabled; SSH uses your registered public key.

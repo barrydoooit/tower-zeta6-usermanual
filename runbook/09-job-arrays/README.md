@@ -2,7 +2,8 @@
 
 Use an array for independent runs such as a small hyperparameter sweep. The
 [`gpu-array.sbatch`](gpu-array.sbatch) example contains four learning rates and
-allows at most two elements to run simultaneously because Z6 has two GPUs.
+allows at most two elements to run simultaneously only for an account approved
+for two concurrent GPUs. Use `%1` when the Portal shows a one-GPU limit.
 
 ```bash
 mkdir -p logs

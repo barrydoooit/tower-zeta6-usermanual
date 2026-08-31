@@ -2,11 +2,29 @@
 
 ## Complete User Manual
 
-**Edition:** 1.0<br>
-**Verified:** 28 August 2026<br>
+**Edition:** 1.1<br>
+**Verified:** 31 August 2026<br>
 **Service contact:** `b.y.ding@tudelft.nl`
 
-[TOC]
+## Contents
+
+1. [Purpose and scope](#1-purpose-and-scope)
+2. [Service model](#2-service-model)
+3. [Account application and approval](#3-account-application-and-approval)
+4. [Portal password and SSH keys](#4-portal-password-and-ssh-keys)
+5. [Tailscale and SSH access](#5-tailscale-and-ssh-access)
+6. [Storage and file transfer](#6-storage-and-file-transfer)
+7. [Modules and Python environments](#7-modules-and-python-environments)
+8. [Slurm fundamentals](#8-slurm-fundamentals)
+9. [Batch jobs](#9-batch-jobs)
+10. [Monitoring and cancellation](#10-monitoring-and-cancellation)
+11. [Usage, quotas and warnings](#11-usage-quotas-and-warnings)
+12. [Reproducibility and data safety](#12-reproducibility-and-data-safety)
+13. [Troubleshooting](#13-troubleshooting)
+14. [Security and acceptable use](#14-security-and-acceptable-use)
+15. [Support checklist](#15-support-checklist)
+16. [Appendix A — Runbook sequence](#appendix-a--runbook-sequence)
+17. [Appendix B — Command summary](#appendix-b--command-summary)
 
 ## 1. Purpose and scope
 
@@ -67,6 +85,9 @@ https://z6-login.tail8da8d4.ts.net/apply/
 Provide a personal Linux username, full name, email, research purpose,
 estimated annual GPU hours and required persistent storage. Estimates support
 capacity planning. They do not guarantee immediate scheduling priority.
+The administrator separately assigns a maximum concurrent GPU count, normally
+one. This control is not part of the application form and appears on the
+Portal Account page after approval.
 
 Application states include:
 
@@ -212,6 +233,11 @@ The default memory is 3,000 MB per allocated CPU, but explicit realistic memory
 is preferred. There is no configured maximum wall time; always provide one and
 discuss runs expected to exceed 24 hours.
 
+A job may not request more GPUs than the maximum concurrent GPU count shown in
+the Portal. Slurm rejects such a job immediately with a message stating the
+approved limit. If running jobs already consume that limit, additional valid
+GPU jobs are accepted and remain pending until capacity is released.
+
 ### 8.2 Scheduling order
 
 Z6 uses Slurm's backfill scheduler. Current multifactor priority weights are
@@ -220,6 +246,8 @@ but the queue is not a strict first-in-first-out line. A smaller later job may
 start when it fits unused resources without delaying an earlier reservation.
 Pending reasons shown by `squeue` are the reliable explanation for a particular
 job.
+`AssocGrpGRES` means this account's running jobs currently consume its approved
+concurrent GPU allocation.
 
 ### 8.3 Interactive work
 
@@ -251,6 +279,8 @@ then replace only its final smoke-test command with the project entry point.
 For ordinary single-node PyTorch Distributed, request two GPUs and let one
 Slurm task start two workers with `torchrun --nproc-per-node=2`. Use the
 [two-GPU template](https://github.com/barrydoooit/tower-zeta6-usermanual/blob/main/runbook/08-two-gpu-job/two-gpu-torchrun.sbatch).
+This template is available only to accounts whose Portal allocation shows two
+maximum concurrent GPUs; the normal default is one.
 
 Framework-specific launchers may use a different task model. Confirm their
 documentation instead of mixing a Snellius template with the Z6 resource
@@ -277,19 +307,21 @@ scancel JOB_ID
 means the scheduler is holding the job behind other work. Cancel broken, idle
 or unnecessary work promptly.
 
-Completed jobs disappear from `squeue`. Historical Slurm accounting and
-`sacct` are not currently available, so durable stdout/stderr and experiment
-metadata are essential. See
+Completed jobs disappear from `squeue`. Inspect historical records with
+`sacct -j JOB_ID --format=JobID,State,Elapsed,AllocTRES`; durable stdout/stderr
+and experiment metadata remain essential. See
 [Runbook 10](https://github.com/barrydoooit/tower-zeta6-usermanual/tree/main/runbook/10-monitor-and-troubleshoot).
 
 ## 11. Usage, quotas and warnings
 
-The Portal Account page displays approved annual GPU hours, storage request,
-home quota, project quota and project path. These values describe the approved
-allocation; the current user page does not provide historical job accounting.
+The Portal Account page displays approved annual GPU hours, maximum concurrent
+GPUs, storage request, home quota, project quota and project path. These values
+describe the approved allocation; the current user page does not yet visualise
+historical job accounting.
 
-Annual GPU hours are planning information while Slurm accounting is disabled.
-Users remain responsible for honest requests and coordination. Filesystem hard
+Slurm records job accounting, but annual GPU hours remain planning information
+and are not an automatic annual spending cap. Users remain responsible for
+honest requests and coordination. Filesystem hard
 quotas are enforced. A write that exceeds quota fails even if the Portal still
 shows the approved amount rather than live byte usage.
 

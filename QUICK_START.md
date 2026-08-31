@@ -48,7 +48,9 @@ sbatch jobs/single-gpu.sbatch
 ```
 
 For distributed PyTorch, use
-[Runbook 08 and its two-GPU template](runbook/08-two-gpu-job/README.md).
+[Runbook 08 and its two-GPU template](runbook/08-two-gpu-job/README.md) only if
+the Portal shows a maximum concurrent GPU allocation of two. New accounts
+normally receive one.
 
 ## 5. Watch or cancel the job
 
