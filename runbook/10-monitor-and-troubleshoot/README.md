@@ -4,10 +4,19 @@
 
 ```bash
 squeue -u "$USER"
+gpustat
+gpustat -i 2
 scontrol show job JOB_ID
 tail -f logs/JOB_NAME-JOB_ID.out
 scancel JOB_ID
 ```
+
+`gpustat` on `z6-login` (and the **GPU status** page at
+`https://z6-login.tail8da8d4.ts.net/status/` in the Portal) shows live GPU
+utilization, VRAM, power, temperature and active processes **only for GPUs on
+which your own Slurm job is currently `RUNNING`**. Use `gpustat -i 2` for live
+refresh every two seconds or `gpustat --json` for machine-readable output. When
+you have no running GPU job, live GPU telemetry is hidden.
 
 Cancel only your own job and only when it is broken or no longer needed.
 Completed jobs disappear from `squeue`. Inspect a historical record with:

@@ -58,8 +58,14 @@ Follow [Runbook 10](runbook/10-monitor-and-troubleshoot/README.md):
 
 ```bash
 squeue -u "$USER"
+gpustat
+gpustat -i 2
 tail -f logs/JOB_NAME-JOB_ID.out
 scancel JOB_ID
 ```
+
+`gpustat` on `z6-login` (and **GPU status** at `/status/` in the Portal) shows
+live utilization, VRAM, power and temperature for GPUs on which your own Slurm
+job is currently `RUNNING`.
 
 All substantial CPU, memory and GPU work must run through Slurm.

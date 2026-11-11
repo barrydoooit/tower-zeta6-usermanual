@@ -2,8 +2,8 @@
 
 ## Complete User Manual
 
-**Edition:** 1.1<br>
-**Verified:** 31 August 2026<br>
+**Edition:** 1.2<br>
+**Verified:** 11 November 2026<br>
 **Service contact:** `b.y.ding@tudelft.nl`
 
 ## Contents
@@ -297,11 +297,20 @@ one-GPU elements. See
 
 ```bash
 squeue -u "$USER"
+gpustat
+gpustat -i 2
 scontrol show job JOB_ID
 squeue -j JOB_ID -o "%.18i %.9P %.8T %.30R"
 tail -f logs/JOB_NAME-JOB_ID.out
 scancel JOB_ID
 ```
+
+`gpustat` on `z6-login` (and the **GPU status** page at `/status/` in the
+Portal) reports live GPU utilization, VRAM usage, power draw, temperature and
+active processes **only for GPUs on which your own Slurm job is currently
+`RUNNING`**. Use `gpustat -i 2` to refresh every two seconds or `gpustat --json`
+for JSON output. When you have no running GPU job, live GPU telemetry is not
+shown.
 
 `Resources` normally means requested hardware is occupied. `Priority` normally
 means the scheduler is holding the job behind other work. Cancel broken, idle
@@ -419,6 +428,8 @@ ssh z6
 module load 2026
 sinfo
 squeue -u "$USER"
+gpustat
+gpustat -i 2
 sbatch JOB.sbatch
 scontrol show job JOB_ID
 scancel JOB_ID
